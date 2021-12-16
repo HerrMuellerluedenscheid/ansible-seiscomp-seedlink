@@ -1,12 +1,12 @@
 ---
-## tasks file for seedlink
-#- name: gather os specific variables
-#  include_vars: "{{ item }}"
-#  with_first_found:
-#    - "vars/{{ ansible_distribution }}-\
-#      {{ ansible_distribution_major_version }}.yml"
-#    - "vars/{{ ansible_distribution }}.yml"
-#    - "vars/{{ ansible_os_family }}.yml"
+# # tasks file for seedlink
+# - name: gather os specific variables
+#   include_vars: "{{ item }}"
+#   with_first_found:
+#     - "vars/{{ ansible_distribution }}-\
+#       {{ ansible_distribution_major_version }}.yml"
+#     - "vars/{{ ansible_distribution }}.yml"
+#     - "vars/{{ ansible_os_family }}.yml"
 - name: install dependencies
   apt:
     pkg:
@@ -26,10 +26,10 @@
 
 - name: Clone seedlink plugin for seiscomp
   ansible.builtin.git:
-    repo:  https://github.com/SeisComP/seedlink.git
+    repo: https://github.com/SeisComP/seedlink.git
     dest: /src/seiscomp/src/base/seedlink
 
 - name: Run seiscomp target as root
   make:
     chdir: /src/seiscomp/
-  become: yes
+  become: true
