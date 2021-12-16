@@ -1,0 +1,15 @@
+name: test ansible
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ '3.x' ]
+    name: Python ${{ matrix.python-version }} sample
+    steps:
+      - uses: actions/checkout@v2
+      - run: pip install ansible
+      - run: ansible --version
+      - run: printf '[defaults]\nroles_path=../' >ansible.cfg
+      - run: ansible-playbook tests/test.yml -i tests/inventory --syntax-check
