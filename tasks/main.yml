@@ -12,7 +12,6 @@
     pkg:
       - git
       - cmake
-      - cmake-curses-gui
       - libboost-dev
       - libxml2-dev
       - flex
