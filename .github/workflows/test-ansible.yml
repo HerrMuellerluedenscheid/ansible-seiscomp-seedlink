@@ -1,3 +1,4 @@
+---
 name: test ansible
 on: [push]
 jobs:
@@ -5,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [ '3.x' ]
+        python-version: ['3.x']
     name: Python ${{ matrix.python-version }} sample
     steps:
       - uses: actions/checkout@v2
@@ -13,3 +14,10 @@ jobs:
       - run: ansible --version
       - run: printf '[defaults]\nroles_path=../' >ansible.cfg
       - run: ansible-playbook tests/test.yml -i tests/inventory --syntax-check
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: pip install yamllint --user
+      - run: yamllint . -f parsable -c .github/workflows/yamllint.yml
