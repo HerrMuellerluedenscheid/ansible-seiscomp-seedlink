@@ -1,0 +1,26 @@
+galaxy_info:
+  author: Marius Kriegerowski
+  description: Seedlink server
+  company: German Research Centre for Geosciences GFZ Potsdam
+
+  license: license (GPL-2.0-or-later, MIT, etc)
+
+  min_ansible_version: 2.1
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - xenial
+        - bionic
+    - name: Debian
+      versions:
+        - stretch
+        - buster
+        - bullseye
+
+  galaxy_tags:
+    - seismology
+
+dependencies: []
+  # List your role dependencies here, one per line. Be sure to remove the '[]'
+  # above, if you add dependencies to this list.

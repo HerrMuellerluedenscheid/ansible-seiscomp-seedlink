@@ -1,0 +1,6 @@
+---
+# handlers file for seedlink
+- name: "restart seedlink"
+  service:
+    name: seedlink
+    state: restarted

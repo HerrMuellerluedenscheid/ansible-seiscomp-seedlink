@@ -1,0 +1,36 @@
+---
+## tasks file for seedlink
+#- name: gather os specific variables
+#  include_vars: "{{ item }}"
+#  with_first_found:
+#    - "vars/{{ ansible_distribution }}-\
+#      {{ ansible_distribution_major_version }}.yml"
+#    - "vars/{{ ansible_distribution }}.yml"
+#    - "vars/{{ ansible_os_family }}.yml"
+- name: install dependencies
+  apt:
+    pkg:
+      - git
+      - cmake
+      - cmake-curses-gui
+      - libboost-dev
+      - libxml2-dev
+      - flex
+      - libfl-dev
+      - libssl-dev
+      - libcrypto++-dev
+
+- name: Clone seiscomp
+  ansible.builtin.git:
+    repo: https://github.com/SeisComP/seiscomp.git
+    dest: /src/seiscomp
+
+- name: Clone seedlink plugin for seiscomp
+  ansible.builtin.git:
+    repo:  https://github.com/SeisComP/seedlink.git
+    dest: /src/seiscomp/src/base/seedlink
+
+- name: Run seiscomp target as root
+  make:
+    chdir: /src/seiscomp/
+  become: yes
