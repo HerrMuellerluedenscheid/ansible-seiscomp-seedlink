@@ -1,0 +1,9 @@
+[Unit]
+Description=Seedlink server
+
+[Service]
+ExecStart=/opt/seiscomp/bin/seiscomp start seedlink
+ExecStop=/opt/seiscomp/bin/seiscomp stop seedlink
+
+[Install]
+WantedBy=multi-user.target
