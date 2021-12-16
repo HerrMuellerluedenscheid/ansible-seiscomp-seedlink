@@ -1,6 +1,7 @@
 ---
 # handlers file for seedlink
-- name: "restart seedlink"
-  service:
+- name: Start seedlink
+  systemd:
     name: seedlink
-    state: restarted
+    state: started
+    enabled: yes

@@ -57,3 +57,12 @@
     chdir: /src/seiscomp/build
     target: install
   become: true
+
+- name: Copy systemd service file to server
+  copy:
+    src: seedlink.service
+    dest: /etc/systemd/system
+    owner: root
+    group: root
+  notify:
+    - Start seedlink
