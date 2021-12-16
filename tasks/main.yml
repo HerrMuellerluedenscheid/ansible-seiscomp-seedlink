@@ -11,6 +11,7 @@
   apt:
     pkg:
       - git
+      - g++
       - cmake
       - libboost-dev
       - libxml2-dev
@@ -18,6 +19,11 @@
       - libfl-dev
       - libssl-dev
       - libcrypto++-dev
+      # - build-essential
+      - python3-dev
+      - libboost-test-dev
+      - libboost-system-dev
+      - libboost-program-options-dev
 
 - name: Clone seiscomp
   ansible.builtin.git:
@@ -29,7 +35,25 @@
     repo: https://github.com/SeisComP/seedlink.git
     dest: /src/seiscomp/src/base/seedlink
 
-- name: Run seiscomp target as root
-  make:
+- name: Create build directory
+  ansible.builtin.shell: mkdir build
+  args:
     chdir: /src/seiscomp/
+    creates: /src/seiscomp/build
+
+- name: cmake seiscomp
+  ansible.builtin.shell:
+  args:
+    chdir: /src/seiscomp/build
+    creates: Makefile
+    cmd: cmake /src/seiscomp -DCMAKE_INSTALL_PREFIX=/opt/seiscomp
+
+- name: Compile seiscomp
+  community.general.make:
+    chdir: /src/seiscomp/build
+
+- name: Compile seiscomp
+  community.general.make:
+    chdir: /src/seiscomp/build
+    target: install
   become: true
