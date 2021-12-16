@@ -52,7 +52,7 @@
   community.general.make:
     chdir: /src/seiscomp/build
 
-- name: Compile seiscomp
+- name: Install seiscomp
   community.general.make:
     chdir: /src/seiscomp/build
     target: install
