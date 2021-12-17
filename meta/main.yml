@@ -1,10 +1,10 @@
 ---
 galaxy_info:
-  author: Marius Kriegerowski
+  author: Marius Kriegerowski <marius@gfz-potsdam.de>
   description: Seedlink server
   company: German Research Centre for Geosciences GFZ Potsdam
 
-  license: license (GPL-2.0-or-later, MIT, etc)
+  license: GNU AGPLv3
 
   min_ansible_version: 2.1
 
