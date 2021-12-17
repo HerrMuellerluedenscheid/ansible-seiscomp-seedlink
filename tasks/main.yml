@@ -51,6 +51,14 @@
   become: yes
   become_user: "{{ ansible_seedlink_user }}"
 
+- name: Create a target directory if it does not exist
+  ansible.builtin.file:
+    path: /opt/seiscomp
+    state: directory
+    mode: '0755'
+    owner: "{{ ansible_seedlink_user }}"
+    group: "{{ ansible_seedlink_user }}"
+
 - name: Create build directory
   ansible.builtin.shell: mkdir build
   args:
@@ -79,6 +87,7 @@
     chdir: /src/seiscomp/build
     target: install
   become: yes
+  become_user: "{{ ansible_seedlink_user }}"
 
 - name: Copy systemd service file to server
   copy:

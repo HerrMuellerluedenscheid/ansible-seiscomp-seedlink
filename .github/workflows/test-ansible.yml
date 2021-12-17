@@ -16,6 +16,7 @@ jobs:
       - run: ansible-playbook tests/test.yml -i tests/inventory --syntax-check
 
   lint:
+    name: yamllint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
