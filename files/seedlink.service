@@ -2,7 +2,7 @@
 Description=Seedlink server
 
 [Service]
-User="{{ ansible_seedlink_user }}"
+User=sysop
 
 ExecStart=/opt/seiscomp/bin/seiscomp start seedlink
 ExecStop=/opt/seiscomp/bin/seiscomp stop seedlink
