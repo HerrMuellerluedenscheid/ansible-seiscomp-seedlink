@@ -1,3 +1,5 @@
 ---
 # defaults file for seedlink
+ansible_seedlink_user: sysop
+
 seedlink_port: 18000

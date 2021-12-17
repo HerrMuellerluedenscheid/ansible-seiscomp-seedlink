@@ -7,6 +7,13 @@
 #       {{ ansible_distribution_major_version }}.yml"
 #     - "vars/{{ ansible_distribution }}.yml"
 #     - "vars/{{ ansible_os_family }}.yml"
+- name: Add the user 'sysop' with a bash shell, appending the group 'admin', 'adm','audio' and 'sysop' to the user's groups
+  ansible.builtin.user:
+    name: "{{ ansible_seedlink_user }}"
+    shell: /bin/bash
+    groups: admin,adm,audio,{{ ansible_seedlink_user }}
+    append: yes
+
 - name: install dependencies
   apt:
     pkg:
@@ -25,21 +32,32 @@
       - libboost-system-dev
       - libboost-program-options-dev
 
-- name: Clone seiscomp
+- name: Clone seiscomp into /src/seiscomp
   ansible.builtin.git:
     repo: https://github.com/SeisComP/seiscomp.git
     dest: /src/seiscomp
+
+- name: Change file ownership, group and permissions
+  ansible.builtin.file:
+    path: /src/seiscomp
+    owner: "{{ ansible_seedlink_user }}"
+    group: "{{ ansible_seedlink_user }}"
+    recurse: yes
 
 - name: Clone seedlink plugin for seiscomp
   ansible.builtin.git:
     repo: https://github.com/SeisComP/seedlink.git
     dest: /src/seiscomp/src/base/seedlink
+  become: yes
+  become_user: "{{ ansible_seedlink_user }}"
 
 - name: Create build directory
   ansible.builtin.shell: mkdir build
   args:
     chdir: /src/seiscomp/
     creates: /src/seiscomp/build
+  become: yes
+  become_user: "{{ ansible_seedlink_user }}"
 
 - name: cmake seiscomp
   ansible.builtin.shell:
@@ -47,16 +65,20 @@
     chdir: /src/seiscomp/build
     creates: Makefile
     cmd: cmake /src/seiscomp -DCMAKE_INSTALL_PREFIX=/opt/seiscomp
+  become: yes
+  become_user: "{{ ansible_seedlink_user }}"
 
 - name: Compile seiscomp
   community.general.make:
     chdir: /src/seiscomp/build
+  become: yes
+  become_user: "{{ ansible_seedlink_user }}"
 
 - name: Install seiscomp
   community.general.make:
     chdir: /src/seiscomp/build
     target: install
-  become: true
+  become: yes
 
 - name: Copy systemd service file to server
   copy:
