@@ -1,12 +1,5 @@
 ---
-# # tasks file for seedlink
-# - name: gather os specific variables
-#   include_vars: "{{ item }}"
-#   with_first_found:
-#     - "vars/{{ ansible_distribution }}-\
-#       {{ ansible_distribution_major_version }}.yml"
-#     - "vars/{{ ansible_distribution }}.yml"
-#     - "vars/{{ ansible_os_family }}.yml"
+
 - name: Add the user 'sysop' with a bash shell, appending the group 'admin', 'adm','audio' and 'sysop' to the user's groups
   ansible.builtin.user:
     name: "{{ ansible_seedlink_user }}"
@@ -26,11 +19,19 @@
       - libfl-dev
       - libssl-dev
       - libcrypto++-dev
-      # - build-essential
       - python3-dev
+      - maria-db
       - libboost-test-dev
       - libboost-system-dev
       - libboost-program-options-dev
+
+# These packages need further investigatin which ones are strict requirements of the
+# seedlink module:
+# running install based installed the following:
+# libblas3 libboost-filesystem1.71.0 libboost-iostreams1.71.0
+#  libboost-regex1.71.0 libboost-thread1.71.0 libgfortran5 liblapack3 libmariadb3
+#  libmysqlclient21 libncurses5 libpq5 libtinfo5 mariadb-common mysql-common
+#  python3-numpy mariadb-server
 
 - name: Clone seiscomp into /src/seiscomp
   ansible.builtin.git:
@@ -89,11 +90,38 @@
   become: yes
   become_user: "{{ ansible_seedlink_user }}"
 
-- name: Copy systemd service file to server
+- name: Copy seedlink configuration
   copy:
-    src: seedlink.service
-    dest: /etc/systemd/system
-    owner: root
-    group: root
-  notify:
-    - Start seedlink
+    src: seedlink.cfg
+    dest: /opt/seiscomp/etc
+    owner: "{{ ansible_seedlink_user }}"
+    group: "{{ ansible_seedlink_user }}"
+
+# This exits straight away and it's unclear why:
+#- name: setup seiscomp
+#  ansible.builtin.shell: ./seiscomp setup
+#  args:
+#    chdir: /opt/seiscomp/bin
+#  become: yes
+#  become_user: "{{ ansible_seedlink_user }}"
+
+# To update the configuration when new stations have been added or modified,
+# seiscomp update-config needs to be run.
+# Place inventory into /etc/inventory, then run
+#  seiscomp update-config inventory
+- name: update seiscomp config
+  ansible.builtin.shell: ./seiscomp update-config seedlink
+  args:
+    chdir: /opt/seiscomp/bin
+  become: yes
+  become_user: "{{ ansible_seedlink_user }}"
+
+- name: update seiscomp config
+  ansible.builtin.shell: ./seiscomp start seedlink
+  args:
+    chdir: /opt/seiscomp/bin
+  become: yes
+  become_user: "{{ ansible_seedlink_user }}"
+
+# ./bin/seiscomp setup
+# ./bin/seiscomp update-conf

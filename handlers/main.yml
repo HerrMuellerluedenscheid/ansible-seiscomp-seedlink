@@ -1,7 +1,1 @@
 ---
-# handlers file for seedlink
-- name: Start seedlink
-  systemd:
-    name: seedlink
-    state: started
-    enabled: yes
