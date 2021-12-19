@@ -1,10 +1,5 @@
-Ansible Seiscomp Seedlink Server (WIP)
-======================================
+Ansible SeisComP Seedlink Server
+================================
 
-Installation and configuration of [Seedlink Server](https://github.com/SeisComP/seedlink)
-
-Role Variables
---------------
-
- * `seedlink_port` defaulting to 18000
- 
+Installation of the SeisComP [Seedlink Server](https://github.com/SeisComP/seedlink).
+The configuration is not yet handled via this role.
